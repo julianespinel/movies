@@ -1,0 +1,26 @@
+server:
+  type: simple
+  applicationContextPath: /movies/api
+  adminContextPath: /movies/admin
+  connector:
+    type: http
+    port: 9001
+    
+logging:
+  level: INFO
+  appenders:
+    - type: console
+      timeZone: UTC
+      target: stdout
+    - type: file
+      timeZone: UTC
+      currentLogFilename: ./logs/movies.log
+      archivedLogFilenamePattern: ./logs/movies-%d.log
+      archivedFileCount: 5
+
+mongoDBConfig:
+  dbName: moviesdb_develop
+  dbHost: localhost
+  dbPort: 27017
+  dbUser: admin
+  dbPassword: mypass
