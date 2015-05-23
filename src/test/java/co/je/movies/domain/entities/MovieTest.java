@@ -10,11 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import co.je.movies.util.factories.MovieFactoryForTests;
+import co.je.movies.util.factories.ObjectMapperFactoryForTests;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 
 public class MovieTest {
     
@@ -23,15 +21,7 @@ public class MovieTest {
     @BeforeClass
     public static void setUpClass() {
         
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JSR310Module());
-        
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        
-        objectMapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper = ObjectMapperFactoryForTests.getConfiguredObjectMapper();
     }
     
     @Test
