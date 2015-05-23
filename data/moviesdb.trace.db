@@ -43,3 +43,6 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:/home/julian
 	at org.h2.mvstore.FileStore.open(FileStore.java:172)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:337)
 	... 30 more
+05-23 08:35:25 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Table "TABLE" not found; SQL statement:
+DELETE FROM TABLE movies WHERE imdbId = ?; [42102-187]

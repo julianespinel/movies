@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -76,5 +77,19 @@ public class MovieResource {
         Status statusCode = optionalUpdatedMovie.isPresent() ? Status.OK : Status.NOT_FOUND;
         
         return Response.status(statusCode).entity(optionalUpdatedMovie).build();
+    }
+    
+    @DELETE
+    @Timed
+    @Path("/{imdbId}")
+    public Response deleteMovie(@PathParam("imdbId") String imdbId) {
+        
+        boolean movieWasDeleted = movieBusiness.deleteMovie(imdbId);
+        
+        Status statusCode = movieWasDeleted ? Status.OK : Status.NOT_FOUND;
+        Map<String, Boolean> booleanMessage = new HashMap<String, Boolean>();
+        booleanMessage.put("The movie was deleted?", movieWasDeleted);
+        
+        return Response.status(statusCode).entity(booleanMessage).build();
     }
 }

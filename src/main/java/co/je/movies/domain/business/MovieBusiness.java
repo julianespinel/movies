@@ -86,4 +86,20 @@ public class MovieBusiness {
         
         return optionalUpdatedMovie;
     }
+
+    public boolean deleteMovie(String imdbId) {
+        
+        boolean movieWasDeleted = false;
+        
+        try (Connection dbConnection = dataSource.getConnection()) {
+            
+            movieWasDeleted = movieDAO.deleteMovie(dbConnection, imdbId);
+            
+        } catch (SQLException e) {
+            
+            throw new IllegalStateException(e);
+        }
+        
+        return movieWasDeleted;
+    }
 }

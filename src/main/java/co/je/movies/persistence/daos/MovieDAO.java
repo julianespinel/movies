@@ -138,4 +138,19 @@ public class MovieDAO {
         Optional<Movie> updatedMovie = (rowsAffected == 1) ? getMovieByImdbId(dbConnection, imdbId) : Optional.empty();
         return updatedMovie;
     }
+
+    public boolean deleteMovie(Connection dbConnection, String imdbId) throws SQLException {
+        
+        String deleteMovieSQL = "DELETE FROM movies WHERE imdbId = ?;";
+        
+        PreparedStatement prepareStatement = dbConnection.prepareStatement(deleteMovieSQL);
+        prepareStatement.setString(1, imdbId);
+        
+        LOGGER.info("deleteMovie: " + prepareStatement);
+        int rowsAffected = prepareStatement.executeUpdate();
+        prepareStatement.close();
+        
+        boolean movieWasDeleted = (rowsAffected == 1);
+        return movieWasDeleted;
+    }
 }
