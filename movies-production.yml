@@ -18,9 +18,19 @@ logging:
       archivedLogFilenamePattern: ./logs/movies-%d.log
       archivedFileCount: 5
 
-mongoDBConfig:
-  dbName: moviesdb_production
-  dbHost: localhost
-  dbPort: 27017
-  dbUser: admin
-  dbPassword: mypass
+sqlConfig:
+  
+  # the name of your JDBC driver
+  driverClass: org.h2.Driver
+  
+  # the JDBC URL
+  url: jdbc:h2:~/moviesdb
+
+  # the username
+  username: movies
+    
+  # the password
+  password: movies123
+  
+  removeAbandonedTimeoutInSeconds: 120
+  ableToRemoveAbandonedConnections: true

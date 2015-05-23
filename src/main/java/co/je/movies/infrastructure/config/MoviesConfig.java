@@ -4,9 +4,9 @@ import io.dropwizard.Configuration;
 
 public class MoviesConfig extends Configuration {
 	
-	private MongoDBConfig mongoDBConfig;
+	private SQLConfig sqlConfig;
 
-    public MongoDBConfig getMongoDBConfig() {
-        return mongoDBConfig;
+    public SQLConfig getSqlConfig() {
+        return sqlConfig;
     }
 }

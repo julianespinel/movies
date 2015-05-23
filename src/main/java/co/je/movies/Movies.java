@@ -5,24 +5,22 @@ import io.dropwizard.java8.Java8Bundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
-import java.net.UnknownHostException;
 import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration.Dynamic;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import co.je.movies.infrastructure.config.MoviesConfig;
+import co.je.movies.infrastructure.config.SQLConfig;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.mongodb.DB;
-import com.mongodb.MongoClient;
-import com.mongodb.ServerAddress;
 
 public class Movies extends Application<MoviesConfig> {
     
@@ -55,33 +53,37 @@ public class Movies extends Application<MoviesConfig> {
 
         return objectMapper;
     }
+    
+    private BasicDataSource getInitializedDataSource(SQLConfig sqlConfig) {
 
-    private DB getMongoDB(MoviesConfig moviesConfig) throws UnknownHostException {
+        BasicDataSource basicDataSource = new BasicDataSource();
 
-    	ServerAddress mongoServer = new ServerAddress(moviesConfig.getMongoDBConfig().getDbHost(), moviesConfig.getMongoDBConfig().getDbPort());
-    	MongoClient mongoClient = new MongoClient(mongoServer);
-        DB mongoDB = mongoClient.getDB(moviesConfig.getMongoDBConfig().getDbName());
+        basicDataSource.setDriverClassName(sqlConfig.getDriverClass());
+        basicDataSource.setUrl(sqlConfig.getUrl());
+        basicDataSource.setUsername(sqlConfig.getUsername());
+        basicDataSource.setPassword(sqlConfig.getPassword());
 
-        return mongoDB;
+        return basicDataSource;
     }
 
     @Override
     public void run(MoviesConfig moviesConfig, Environment environment) throws Exception {
 
-        // add CORS support
+        // add CORS support.
         addCORSSupport(environment);
         
-        // Configure Jackson serialization and deserialization
+        // Configure Jackson serialization and deserialization.
         ObjectMapper objectMapper = configureJackson(environment);
-
-        // Initialize the DB connection
-        DB mongoDB = getMongoDB(moviesConfig);
+        
+        // Get initialized data source.
+        BasicDataSource dataSource = getInitializedDataSource(moviesConfig.getSqlConfig());
+        
     }
 
     public static void main(String[] args) {
 
         try {
-
+            
             Movies movies = new Movies();
             movies.run(args);
 
