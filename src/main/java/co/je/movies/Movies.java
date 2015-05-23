@@ -5,6 +5,8 @@ import io.dropwizard.java8.Java8Bundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
@@ -15,15 +17,19 @@ import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import co.je.movies.api.resources.MovieResource;
+import co.je.movies.domain.business.MovieBusiness;
 import co.je.movies.infrastructure.config.MoviesConfig;
 import co.je.movies.infrastructure.config.SQLConfig;
+import co.je.movies.persistence.daos.MovieDAO;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 
 public class Movies extends Application<MoviesConfig> {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Movies.class);
 
     @Override
@@ -46,14 +52,18 @@ public class Movies extends Application<MoviesConfig> {
     private ObjectMapper configureJackson(Environment environment) {
 
         ObjectMapper objectMapper = environment.getObjectMapper();
+        objectMapper.registerModule(new JSR310Module());
+
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         objectMapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
         objectMapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         return objectMapper;
     }
-    
+
     private BasicDataSource getInitializedDataSource(SQLConfig sqlConfig) {
 
         BasicDataSource basicDataSource = new BasicDataSource();
@@ -66,24 +76,43 @@ public class Movies extends Application<MoviesConfig> {
         return basicDataSource;
     }
 
+    private void createTablesIfNeeded(BasicDataSource dataSource) throws SQLException {
+
+        Connection dbConnection = dataSource.getConnection();
+        MovieDAO movieDAO = new MovieDAO();
+        movieDAO.createTableIfNotExists(dbConnection);
+    }
+
+    private MovieResource getMovieResource(BasicDataSource dataSource) {
+
+        MovieDAO movieDAO = new MovieDAO();
+        MovieBusiness movieBusiness = new MovieBusiness(dataSource, movieDAO);
+        MovieResource movieResource = new MovieResource(movieBusiness);
+
+        return movieResource;
+    }
+
     @Override
     public void run(MoviesConfig moviesConfig, Environment environment) throws Exception {
 
         // add CORS support.
         addCORSSupport(environment);
-        
+
         // Configure Jackson serialization and deserialization.
-        ObjectMapper objectMapper = configureJackson(environment);
-        
+        configureJackson(environment);
+
         // Get initialized data source.
         BasicDataSource dataSource = getInitializedDataSource(moviesConfig.getSqlConfig());
-        
+        createTablesIfNeeded(dataSource);
+
+        MovieResource movieResource = getMovieResource(dataSource);
+        environment.jersey().register(movieResource);
     }
 
     public static void main(String[] args) {
 
         try {
-            
+
             Movies movies = new Movies();
             movies.run(args);
 
