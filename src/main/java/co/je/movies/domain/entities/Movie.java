@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-public class Movie {
+public class Movie implements Comparable<Movie> {
     
     @NotBlank
     private String imdbId;
@@ -99,5 +99,25 @@ public class Movie {
 
     public long getImdbVotes() {
         return imdbVotes;
+    }
+
+    @Override
+    public int compareTo(Movie movie) {
+        
+        int answer = 0;
+        
+        answer += imdbId.compareTo(movie.getImdbId());
+        answer += title.compareTo(movie.getTitle());
+        answer += (runtimeInMinutes - movie.getRuntimeInMinutes());
+        answer += releaseDate.compareTo(movie.getReleaseDate());
+        answer += filmRating.compareTo(movie.getFilmRating());
+        answer += genre.compareTo(movie.getGenre());
+        answer += director.compareTo(movie.getDirector());
+        answer += plot.compareTo(movie.getPlot());
+        answer += (metascore - movie.getMetascore());
+        answer += imdbRating.compareTo(movie.getImdbRating());
+        answer += (imdbVotes - movie.getImdbVotes());
+        
+        return answer;
     }
 }
