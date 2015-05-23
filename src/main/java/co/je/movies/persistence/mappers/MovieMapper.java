@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import co.je.movies.domain.entities.FilmRating;
@@ -49,5 +51,22 @@ public class MovieMapper {
         
         Optional<Movie> optionalMovie = resultSet.next() ? getMovieFromResultSet(resultSet) : Optional.empty();
         return optionalMovie;
+    }
+
+    public static List<Movie> getMultipleMovies(ResultSet resultSet) throws SQLException {
+        
+        List<Movie> movies = new ArrayList<Movie>();
+        
+        while (resultSet.next()) {
+            
+            Optional<Movie> movie = getMovieFromResultSet(resultSet);
+            
+            if (movie.isPresent()) {
+                
+                movies.add(movie.get());
+            }
+        }
+        
+        return movies;
     }
 }

@@ -1,6 +1,8 @@
 package co.je.movies.api.resources;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -11,6 +13,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -52,5 +55,14 @@ public class MovieResource {
         Status statusCode = optionalMovie.isPresent() ? Status.OK : Status.NOT_FOUND;
         
         return Response.status(statusCode).entity(optionalMovie).build();
+    }
+    
+    @GET
+    @Timed
+    public Response getMoviesByParams(@QueryParam("title") String title, @QueryParam("runtimeInMinutes") int runtimeInMinutes,
+            @QueryParam("metascore") int metascore, @QueryParam("imdbRating") BigDecimal imdbRating, @QueryParam("imdbVotes") long imdbVotes ) {
+        
+        List<Movie> movies = movieBusiness.getMoviesByParams(title, runtimeInMinutes, metascore, imdbRating, imdbVotes);
+        return Response.status(Status.OK).entity(movies).build();
     }
 }

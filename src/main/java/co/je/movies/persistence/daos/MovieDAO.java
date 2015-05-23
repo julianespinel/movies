@@ -1,17 +1,27 @@
 package co.je.movies.persistence.daos;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import co.je.movies.domain.entities.Movie;
 import co.je.movies.persistence.mappers.MovieMapper;
 
 public class MovieDAO {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MovieDAO.class);
 
     public void createTableIfNotExists(Connection dbConnection) throws SQLException {
 
@@ -45,6 +55,8 @@ public class MovieDAO {
         prepareStatement.setBigDecimal(10, movie.getImdbRating());
         prepareStatement.setLong(11, movie.getImdbVotes());
 
+        LOGGER.info("createMovie: " + prepareStatement);
+
         prepareStatement.executeUpdate();
         return movie.getImdbId();
     }
@@ -57,12 +69,44 @@ public class MovieDAO {
         PreparedStatement prepareStatement = dbConnection.prepareStatement(getMovieByImdbIdSQL);
         prepareStatement.setString(1, imdbId);
 
+        LOGGER.info("getMovieByImdbId: " + prepareStatement);
+
         ResultSet resultSet = prepareStatement.executeQuery();
         optionalMovie = MovieMapper.getSingleMovie(resultSet);
-        
+
         resultSet.close();
         prepareStatement.close();
-        
+
         return optionalMovie;
+    }
+
+    public List<Movie> getMoviesByParams(Connection dbConnection, String title, int runtimeInMinutes, int metascore,
+            BigDecimal imdbRating, long imdbVotes) throws SQLException {
+
+        List<Movie> movies = new ArrayList<Movie>();
+        String getMoviesByParamsSQL = "SELECT * FROM movies WHERE title LIKE ? AND runtimeInMinutes >= ? AND metascore >= ? AND imdbRating >= ? AND imdbVotes >= ?;";
+
+        PreparedStatement prepareStatement = dbConnection.prepareStatement(getMoviesByParamsSQL);
+        
+        String titleQuery = StringUtils.isBlank(title) ? "%" : "%" + title + "%";
+        prepareStatement.setString(1, titleQuery);
+        
+        prepareStatement.setInt(2, runtimeInMinutes);
+        prepareStatement.setInt(3, metascore);
+        
+        BigDecimal imdbRatingQuery = Objects.isNull(imdbRating) ? BigDecimal.ZERO : imdbRating;
+        prepareStatement.setBigDecimal(4, imdbRatingQuery);
+        
+        prepareStatement.setLong(5, imdbVotes);
+
+        LOGGER.info("getMoviesByParams: " + prepareStatement);
+
+        ResultSet resultSet = prepareStatement.executeQuery();
+        movies = MovieMapper.getMultipleMovies(resultSet);
+
+        resultSet.close();
+        prepareStatement.close();
+
+        return movies;
     }
 }

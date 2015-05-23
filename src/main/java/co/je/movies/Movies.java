@@ -35,7 +35,8 @@ public class Movies extends Application<MoviesConfig> {
 
     @Override
     public void initialize(Bootstrap<MoviesConfig> bootstrap) {
-        
+
+//        bootstrap.addBundle(new Java8Bundle());
     }
 
     private void addCORSSupport(Environment environment) {

@@ -1,7 +1,10 @@
 package co.je.movies.domain.business;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -50,5 +53,21 @@ public class MovieBusiness {
         }
         
         return optionalMovie;
+    }
+
+    public List<Movie> getMoviesByParams(String title, int runtimeInMinutes, int metascore, BigDecimal imdbRating, long imdbVotes) {
+        
+        List<Movie> movies = new ArrayList<Movie>();
+        
+        try (Connection dbConnection = dataSource.getConnection()) {
+            
+            movies = movieDAO.getMoviesByParams(dbConnection, title, runtimeInMinutes, metascore, imdbRating, imdbVotes);
+            
+        } catch (SQLException e) {
+            
+            throw new IllegalStateException(e);
+        }
+        
+        return movies;
     }
 }
