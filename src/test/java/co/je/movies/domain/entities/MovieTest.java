@@ -35,7 +35,7 @@ public class MovieTest {
             Movie matrixMovie = MovieFactoryForTests.getMatrixMovie();
             String jsonMatrixMovie = objectMapper.writeValueAsString(matrixMovie);
             
-            assertEquals(jsonMovieFromFile, jsonMatrixMovie);
+            assertEquals("", jsonMatrixMovie);
             
         } catch (IOException e) {
             
