@@ -2,11 +2,14 @@ package co.je.movies.persistence.daos;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import co.je.movies.domain.entities.Movie;
+import co.je.movies.persistence.mappers.MovieMapper;
 
 public class MovieDAO {
 
@@ -44,5 +47,22 @@ public class MovieDAO {
 
         prepareStatement.executeUpdate();
         return movie.getImdbId();
+    }
+
+    public Optional<Movie> getMovieByImdbId(Connection dbConnection, String imdbId) throws SQLException {
+
+        Optional<Movie> optionalMovie = Optional.empty();
+        String getMovieByImdbIdSQL = "SELECT * FROM movies WHERE imdbId = ?;";
+
+        PreparedStatement prepareStatement = dbConnection.prepareStatement(getMovieByImdbIdSQL);
+        prepareStatement.setString(1, imdbId);
+
+        ResultSet resultSet = prepareStatement.executeQuery();
+        optionalMovie = MovieMapper.getSingleMovie(resultSet);
+        
+        resultSet.close();
+        prepareStatement.close();
+        
+        return optionalMovie;
     }
 }

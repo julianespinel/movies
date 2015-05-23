@@ -1,7 +1,6 @@
 package co.je.movies;
 
 import io.dropwizard.Application;
-import io.dropwizard.java8.Java8Bundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
@@ -26,7 +25,9 @@ import co.je.movies.persistence.daos.MovieDAO;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
 public class Movies extends Application<MoviesConfig> {
 
@@ -34,8 +35,7 @@ public class Movies extends Application<MoviesConfig> {
 
     @Override
     public void initialize(Bootstrap<MoviesConfig> bootstrap) {
-
-        bootstrap.addBundle(new Java8Bundle());
+        
     }
 
     private void addCORSSupport(Environment environment) {
@@ -52,7 +52,9 @@ public class Movies extends Application<MoviesConfig> {
     private ObjectMapper configureJackson(Environment environment) {
 
         ObjectMapper objectMapper = environment.getObjectMapper();
+        objectMapper.registerModule(new ParameterNamesModule());
         objectMapper.registerModule(new JSR310Module());
+        objectMapper.registerModule(new Jdk8Module());
 
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         objectMapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);

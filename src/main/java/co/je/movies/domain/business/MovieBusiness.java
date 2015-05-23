@@ -2,6 +2,7 @@ package co.je.movies.domain.business;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
@@ -33,5 +34,21 @@ public class MovieBusiness {
         }
         
         return imdbId;
+    }
+
+    public Optional<Movie> getMovieByImdbId(String imdbId) {
+        
+        Optional<Movie> optionalMovie = Optional.empty();
+        
+        try (Connection dbConnection = dataSource.getConnection()) {
+            
+            optionalMovie = movieDAO.getMovieByImdbId(dbConnection, imdbId);
+            
+        } catch (SQLException e) {
+            
+            throw new IllegalStateException(e);
+        }
+        
+        return optionalMovie;
     }
 }

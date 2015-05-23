@@ -2,11 +2,14 @@ package co.je.movies.api.resources;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,8 +39,18 @@ public class MovieResource {
         String imdbId = movieBusiness.createMovie(movie);
         Map<String, String> stringMessage = new HashMap<String, String>();
         stringMessage.put("imdbId", imdbId);
-        Response response = Response.status(Status.CREATED).entity(stringMessage).build();
         
-        return response;
+        return Response.status(Status.CREATED).entity(stringMessage).build();
+    }
+    
+    @GET
+    @Timed
+    @Path("/{imdbId}")
+    public Response getMovieByImdbId(@PathParam("imdbId") String imdbId) {
+        
+        Optional<Movie> optionalMovie = movieBusiness.getMovieByImdbId(imdbId);
+        Status statusCode = optionalMovie.isPresent() ? Status.OK : Status.NOT_FOUND;
+        
+        return Response.status(statusCode).entity(optionalMovie).build();
     }
 }
