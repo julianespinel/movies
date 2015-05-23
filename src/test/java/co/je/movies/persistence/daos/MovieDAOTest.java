@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import org.apache.commons.dbutils.DbUtils;
 import org.junit.After;
@@ -144,6 +145,56 @@ public class MovieDAOTest {
         } catch (SQLException e) {
             
             assertNotNull(e);
+        }
+    }
+    
+    @Test
+    public void testGetMovieByImdbId_OK() {
+        
+        try {
+            
+            int rows = countMovieTableRows(dbConnection);
+            assertEquals(0, rows);
+            
+            Movie matrixMovie = MovieFactoryForTests.getMatrixMovie();
+            String imdbId = movieDAO.createMovie(dbConnection, matrixMovie);
+            assertEquals(matrixMovie.getImdbId(), imdbId);
+            
+            rows = countMovieTableRows(dbConnection);
+            assertEquals(1, rows);
+            
+            Optional<Movie> optionalMovieFromDB = movieDAO.getMovieByImdbId(dbConnection, imdbId);
+            assertNotNull(optionalMovieFromDB);
+            assertEquals(true, optionalMovieFromDB.isPresent());
+            
+            assertEquals(0, matrixMovie.compareTo(optionalMovieFromDB.get()));
+            
+        } catch (SQLException e) {
+            
+            e.printStackTrace();
+            fail("Unexpected exception");
+        }
+    }
+    
+    @Test
+    public void testGetMovieByImdbId_NOK_emptyTable() {
+        
+        try {
+            
+            int rows = countMovieTableRows(dbConnection);
+            assertEquals(0, rows);
+            
+            Movie matrixMovie = MovieFactoryForTests.getMatrixMovie();
+            String imdbId = matrixMovie.getImdbId();
+            
+            Optional<Movie> optionalMovieFromDB = movieDAO.getMovieByImdbId(dbConnection, imdbId);
+            assertNotNull(optionalMovieFromDB);
+            assertEquals(false, optionalMovieFromDB.isPresent());
+            
+        } catch (SQLException e) {
+            
+            e.printStackTrace();
+            fail("Unexpected exception");
         }
     }
 }
