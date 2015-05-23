@@ -13,7 +13,7 @@ public class MovieDAO {
     public void createTableIfNotExists(Connection dbConnection) throws SQLException {
 
         String createTableIfNeededSQL = "CREATE TABLE IF NOT EXISTS movies "
-                + "(imdbId VARCHAR(128), title VARCHAR(512), runtimeInMinutes SMALLINT, releaseDate TIMESTAMP, filmRating VARCHAR(32), genre VARCHAR(128), "
+                + "(imdbId VARCHAR(128) PRIMARY KEY, title VARCHAR(512), runtimeInMinutes SMALLINT, releaseDate TIMESTAMP, filmRating VARCHAR(32), genre VARCHAR(128), "
                 + "director VARCHAR(256), plot VARCHAR(1024), metascore SMALLINT, imdbRating DECIMAL(2,1), imdbVotes BIGINT);";
 
         PreparedStatement prepareStatement = dbConnection.prepareStatement(createTableIfNeededSQL);
