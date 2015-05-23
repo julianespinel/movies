@@ -109,4 +109,33 @@ public class MovieDAO {
 
         return movies;
     }
+
+    public Optional<Movie> updateMovie(Connection dbConnection, String imdbId, Movie movieToUpdate) throws SQLException {
+        
+        String updateMovieSQL = "UPDATE movies SET title = ?, runtimeInMinutes = ?, releaseDate = ?, filmRating = ?, genre = ?, director = ?, plot = ?, "
+                + "metascore = ?, imdbRating = ?, imdbVotes = ? WHERE imdbId = ?;";
+        
+        PreparedStatement prepareStatement = dbConnection.prepareStatement(updateMovieSQL);
+        prepareStatement.setString(1, movieToUpdate.getTitle());
+        prepareStatement.setInt(2, movieToUpdate.getRuntimeInMinutes());
+
+        LocalDateTime releaseDate = movieToUpdate.getReleaseDate();
+        prepareStatement.setTimestamp(3, Timestamp.valueOf(releaseDate));
+
+        prepareStatement.setString(4, movieToUpdate.getFilmRating().getPlainName());
+        prepareStatement.setString(5, movieToUpdate.getGenre());
+        prepareStatement.setString(6, movieToUpdate.getDirector());
+        prepareStatement.setString(7, movieToUpdate.getPlot());
+        prepareStatement.setInt(8, movieToUpdate.getMetascore());
+        prepareStatement.setBigDecimal(9, movieToUpdate.getImdbRating());
+        prepareStatement.setLong(10, movieToUpdate.getImdbVotes());
+        prepareStatement.setString(11, imdbId);
+        
+        LOGGER.info("updateMovie: " + prepareStatement);
+        int rowsAffected = prepareStatement.executeUpdate();
+        prepareStatement.close();
+        
+        Optional<Movie> updatedMovie = (rowsAffected == 1) ? getMovieByImdbId(dbConnection, imdbId) : Optional.empty();
+        return updatedMovie;
+    }
 }

@@ -70,4 +70,20 @@ public class MovieBusiness {
         
         return movies;
     }
+
+    public Optional<Movie> updateMovie(String imdbId, Movie movieToUpdate) {
+        
+        Optional<Movie> optionalUpdatedMovie = Optional.empty();
+        
+        try (Connection dbConnection = dataSource.getConnection()) {
+            
+            optionalUpdatedMovie = movieDAO.updateMovie(dbConnection, imdbId, movieToUpdate);
+            
+        } catch (SQLException e) {
+            
+            throw new IllegalStateException(e);
+        }
+        
+        return optionalUpdatedMovie;
+    }
 }
