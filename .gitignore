@@ -105,3 +105,4 @@ Session.vim
 .netrwhist
 *~
 /target/
+/data/
