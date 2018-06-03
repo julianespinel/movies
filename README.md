@@ -1,33 +1,60 @@
-# movies [![Build Status](https://travis-ci.org/julianespinel/movies.svg?branch=master)](https://travis-ci.org/julianespinel/movies)
+# movies
 
-Movies is a basic microservice built using Dropwizard. It was created with educational purposes, to be used as a resource for this meetup: [How to build, test and deploy a microservice?](http://www.meetup.com/Bogota-JVM-Meetup/events/222159221)
+`movies` is a sample exercise to understand how to build basic a microservice using different programming languages.
 
-## Installation
+Any implementation of `movies` should:
 
-To install the movies microservice just follow these 4 simple steps: 
+1. Respect a set of constraints (see Constraints section below)
+1. Follow the same API (see API section below)
 
-1. git clone git@github.com:julianespinel/movies.git
-2. cd movies/scripts
-3. sh build.sh
-4. sh start-develop.sh
-5. sh create-movies.sh
+The goal of this project is to be able to compare different technologies by offering the same system behavior.
 
-## Usage
+## Implementations
 
-To check if the the microservice is up and running go to `http://localhost:9001/movies/admin/ping`. 
-If you receive `pong` as response then it is running.
+Currently the following implementations are available:
 
-With the movies microservice you are able to execute the following acitons: 
+1. [Java](https://github.com/julianespinel/movies-java)
 
-1. Create a movie
-2. Find a specific movie
-3. Find a set of movies
-4. Update a movie
-5. Delete a movie
+## Constraints
+
+Any implementation of `movies` should respect the following constraints:
+
+1. Have a `README.md` file with at least the following sections:
+   1. Installation
+   1. Usage
+   1. Run tests
+1. Have code coverage by unit tests greater or equal to 80%
+1. Read configuration values from a file
+1. Store movies in a database
+1. Log to a file
 
 ## API
 
-### 1. Create a movie
+Any implementation of `movies` should offer the following actions: 
+
+1. Check microservice is alive
+1. Create a movie
+1. Find a specific movie
+1. Find a set of movies
+1. Update a movie
+1. Delete a movie
+
+Each API call is specified below:
+
+### 1. Check microservice is alive
+
+*Request*
+
+Method: `GET`<br>
+URL: `http://localhost:9001/movies/admin/ping`<br>
+
+*Response*
+
+```
+pong
+```
+
+### 2. Create a movie
 
 *Request*
 
@@ -59,7 +86,7 @@ Body:
 }
 ```
 
-### 2. Find a specific movie
+### 3. Find a specific movie
 
 *Request*
 
@@ -84,7 +111,7 @@ URL: `http://localhost:9001/movies/api/movies/tt0133093`<br>
 }
 ```
 
-### 3. Find a set of movies
+### 4. Find a set of movies
 
 *Request*
 
@@ -111,7 +138,7 @@ URL: `http://localhost:9001/movies/api/movies?title=Matrix&runtimeInMinutes=130&
 ]
 ```
 
-### 4. Update a movie
+### 5. Update a movie
 
 *Request*
 
@@ -154,7 +181,7 @@ We changed the title, director, plot and the metascore.
 }
 ```
 
-### 5. Delete a movie
+### 6. Delete a movie
 
 *Request*
 
