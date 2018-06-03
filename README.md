@@ -1,11 +1,11 @@
 # movies
 
-Movies is a sample exercise to understand how to build basic microservice using different programming languages.
+`movies` is a sample exercise to understand how to build basic a microservice using different programming languages.
 
 The HTTP API of any implementation of movies should be the same, the goal of this project is to be able
 to compare different technologies by offering the same system behavior.
 
-With the movies microservice you are able to execute the following acitons: 
+With the `movies` microservice you are able to execute the following actions: 
 
 1. Check microservice is alive
 1. Create a movie
@@ -14,11 +14,15 @@ With the movies microservice you are able to execute the following acitons:
 1. Update a movie
 1. Delete a movie
 
+## Implementations
+
 Currently the following implementations are available:
 
 1. [Java](https://github.com/julianespinel/movies-java)
 
 ## API
+
+Any implementation of `movies` should follow the API described here:
 
 ### 1. Check microservice is alive
 
