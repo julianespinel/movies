@@ -2,10 +2,30 @@
 
 `movies` is a sample exercise to understand how to build basic a microservice using different programming languages.
 
-The HTTP API of any implementation of movies should be the same, the goal of this project is to be able
-to compare different technologies by offering the same system behavior.
+Any implementation of `movies` should:
 
-With the `movies` microservice you are able to execute the following actions: 
+1. Respect a set of constraints (see Constraints section below)
+1. Follow the same API (see API section below)
+
+The goal of this project is to be able to compare different technologies by offering the same system behavior.
+
+## Implementations
+
+Currently the following implementations are available:
+
+1. [Java](https://github.com/julianespinel/movies-java)
+
+## Constraints
+
+Any implementation of `movies` should respect the following constraints:
+
+1. Have code coverage by unit tests greater or equal to 80%.
+1. Read configuration values from a file.
+1. Store movies in a database.
+
+## API
+
+Any implementation of `movies` should offer the following actions: 
 
 1. Check microservice is alive
 1. Create a movie
@@ -14,15 +34,7 @@ With the `movies` microservice you are able to execute the following actions:
 1. Update a movie
 1. Delete a movie
 
-## Implementations
-
-Currently the following implementations are available:
-
-1. [Java](https://github.com/julianespinel/movies-java)
-
-## API
-
-Any implementation of `movies` should follow the API described here:
+Each API call is specified below:
 
 ### 1. Check microservice is alive
 
