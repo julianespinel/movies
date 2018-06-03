@@ -1,33 +1,39 @@
-# movies [![Build Status](https://travis-ci.org/julianespinel/movies.svg?branch=master)](https://travis-ci.org/julianespinel/movies)
+# movies
 
-Movies is a basic microservice built using Dropwizard. It was created with educational purposes, to be used as a resource for this meetup: [How to build, test and deploy a microservice?](http://www.meetup.com/Bogota-JVM-Meetup/events/222159221)
+Movies is a sample exercise to understand how to build basic microservice using different programming languages.
 
-## Installation
-
-To install the movies microservice just follow these 4 simple steps: 
-
-1. git clone git@github.com:julianespinel/movies.git
-2. cd movies/scripts
-3. sh build.sh
-4. sh start-develop.sh
-5. sh create-movies.sh
-
-## Usage
-
-To check if the the microservice is up and running go to `http://localhost:9001/movies/admin/ping`. 
-If you receive `pong` as response then it is running.
+The HTTP API of any implementation of movies should be the same, the goal of this project is to be able
+to compare different technologies by offering the same system behavior.
 
 With the movies microservice you are able to execute the following acitons: 
 
+1. Check microservice is alive
 1. Create a movie
-2. Find a specific movie
-3. Find a set of movies
-4. Update a movie
-5. Delete a movie
+1. Find a specific movie
+1. Find a set of movies
+1. Update a movie
+1. Delete a movie
+
+Currently the following implementations are available:
+
+1. [Java](https://github.com/julianespinel/movies-java)
 
 ## API
 
-### 1. Create a movie
+### 1. Check microservice is alive
+
+*Request*
+
+Method: `GET`<br>
+URL: `http://localhost:9001/movies/admin/ping`<br>
+
+*Response*
+
+```
+pong
+```
+
+### 2. Create a movie
 
 *Request*
 
@@ -59,7 +65,7 @@ Body:
 }
 ```
 
-### 2. Find a specific movie
+### 3. Find a specific movie
 
 *Request*
 
@@ -84,7 +90,7 @@ URL: `http://localhost:9001/movies/api/movies/tt0133093`<br>
 }
 ```
 
-### 3. Find a set of movies
+### 4. Find a set of movies
 
 *Request*
 
@@ -111,7 +117,7 @@ URL: `http://localhost:9001/movies/api/movies?title=Matrix&runtimeInMinutes=130&
 ]
 ```
 
-### 4. Update a movie
+### 5. Update a movie
 
 *Request*
 
@@ -154,7 +160,7 @@ We changed the title, director, plot and the metascore.
 }
 ```
 
-### 5. Delete a movie
+### 6. Delete a movie
 
 *Request*
 
