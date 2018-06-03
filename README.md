@@ -19,6 +19,10 @@ Currently the following implementations are available:
 
 Any implementation of `movies` should respect the following constraints:
 
+1. Have a `README.md` file with at least the following sections:
+  1. Installation
+  1. Usage
+  1. Run tests
 1. Have code coverage by unit tests greater or equal to 80%.
 1. Read configuration values from a file.
 1. Store movies in a database.
