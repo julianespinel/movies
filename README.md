@@ -10,6 +10,7 @@ To install the movies microservice just follow these 4 simple steps:
 2. cd movies/scripts
 3. sh build.sh
 4. sh start-develop.sh
+5. sh create-movies.sh
 
 ## Usage
 
