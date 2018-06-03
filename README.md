@@ -23,10 +23,10 @@ Any implementation of `movies` should respect the following constraints:
    1. Installation
    1. Usage
    1. Run tests
-1. Have code coverage by unit tests greater or equal to 80%.
-1. Read configuration values from a file.
-1. Store movies in a database.
-1. Log to a file.
+1. Have code coverage by unit tests greater or equal to 80%
+1. Read configuration values from a file
+1. Store movies in a database
+1. Log to a file
 
 ## API
 
